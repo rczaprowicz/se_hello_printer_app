@@ -10,8 +10,18 @@ install:
   - make deps
 
 script:
-  - make test
+  - make lint
+  - make test_xunit
+  - make docker_build
+  - make docker_run
+  - sleep 3; make test_api
+
+
 
 after_success:
-  - make docker_build
-  - make docker_push
+    - make docker_push
+
+deploy:
+  provider: heroku
+  app: arcane-ocean-59910
+  api_key: ${HEROKU_API_KEY}

@@ -1,4 +1,4 @@
-.PHONY: test
+.PHONY: test test-api test_api
 
 deps:
 	pip install -r requirements.txt; \
@@ -10,6 +10,23 @@ lint:
 test:
 	PYTHONPATH=. py.test	--verbose -s
 
+test_cov:
+	PYTHONPATH=. py.test	--verbose -s --cov=.
+
+test_api:
+	python test-api/collabedit.py
+
+test_xunit:
+	PYTHONPATH=. py.test -s --cov=. --junit-xml=test_results.xml
+
+docker_build:
+	docker build -t hello_world_printer .
+
+docker_run:
+	docker_build
+	docker run \
+	--name hello-world-printer-dev \
+
 test_smoke:
 	curl -I --fail 127.0.0.1:5000
 
@@ -20,7 +37,7 @@ docker_build:
 	docker build -t hello-world-printer .
 
 docker_run: docker_build
-	docker run \
+	docker run
 		--name hello-world-printer-dev \
 		-p 5000:5000 \
 		-d hello-world-printer
